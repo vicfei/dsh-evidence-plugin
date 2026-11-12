@@ -44,7 +44,7 @@ export class EvidenceLedger {
     return readFileSync(this.file, "utf8")
       .split("\n")
       .filter(Boolean)
-      .map((l) => JSON.parse(l) as LedgerRow);
+      .map((l: string) => JSON.parse(l) as LedgerRow);
   }
 
   /** Append one transition. Called synchronously with the state change it describes. */

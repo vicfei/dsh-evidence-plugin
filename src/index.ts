@@ -4,8 +4,8 @@
 // the head anchor breaks). Trust is not a claim — it's a chain you can verify.
 
 import type { Context } from "@deepseek-ai/cordis";
-import { EvidenceLedger } from "./ledger.ts";
-import { toTransition } from "./entry.ts";
+import { EvidenceLedger } from "./ledger.js";
+import { toTransition } from "./entry.js";
 
 export const name = "dsh-evidence-plugin";
 
@@ -30,7 +30,7 @@ export function apply(ctx: Context, config: Config): void {
   let sinceCommit = 0;
   ctx.on(
     "session/event" as never,
-    (ev: Record<string, unknown>) => {
+    ((ev: Record<string, unknown>) => {
       const t = toTransition(ev);
       if (!t) return;
       try {
@@ -40,14 +40,14 @@ export function apply(ctx: Context, config: Config): void {
       } catch (e) {
         log.warn(`evidence: emit failed: ${e instanceof Error ? e.message : String(e)}`);
       }
-    } as never,
+    }) as never,
   );
   // Commit cadence: piggyback a timer effect; offline tolerated (ledger stays local).
   ctx.effect(() => {
     const timer = setInterval(() => {
       if (sinceCommit === 0) return;
       sinceCommit = 0;
-      import("./git.ts").then(({ commitEvidence }) =>
+      import("./git.js").then(({ commitEvidence }) =>
         commitEvidence(config.repo).catch((e) => log.warn(`evidence: commit failed: ${e}`)),
       );
     }, 60_000);
