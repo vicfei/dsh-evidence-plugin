@@ -17,7 +17,9 @@
     "src",
     "locale",
     "README.md",
-    "README.zh-CN.md"
+    "README.zh-CN.md",
+    "cordis.patch.yml",
+    "LICENSE"
   ],
   "engines": {
     "node": "^22.22.3 || >=24.0.0"
