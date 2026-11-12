@@ -1,24 +1,26 @@
 // dsh-evidence-plugin — the evidence ledger from dsh-super-agent, inside DeepSeek Harness.
-// Every session transition lands in a hash-chained append-only ledger in YOUR git repo:
-// tamper-evident by construction (edit any row and the chain breaks; truncate the tail and
-// the head anchor breaks). Trust is not a claim — it's a chain you can verify.
+// Every session transition lands in a hash-chained, append-only ledger in YOUR git repo:
+// tamper-evident by construction.
+//
+// Contract (verified against dsh-loopx-plugin's observer):
+//   ctx.on('session/created' | 'session/event' | 'session/disposed', ...)
+//   'session/event' receives (session, event) — the event is the SECOND argument.
 
 import type { Context } from "@deepseek-ai/cordis";
 import { EvidenceLedger } from "./ledger.js";
 import { toTransition } from "./entry.js";
+import { commitEvidence } from "./git.js";
 
 export const name = "dsh-evidence-plugin";
 
-export const inject = ["dsh"];
+export const inject: readonly string[] = [];
 
 export interface Config {
   /** Absolute path to the evidence git repo. */
   repo: string;
-  /** Commit after every N transitions (0 = no auto-commit). */
-  commitEvery: number;
 }
 
-export const Config: Config = { repo: "", commitEvery: 50 } as unknown as Config;
+export const Config: Config = { repo: "" } as unknown as Config;
 
 export function apply(ctx: Context, config: Config): void {
   const log = ctx.logger;
@@ -27,30 +29,36 @@ export function apply(ctx: Context, config: Config): void {
     return;
   }
   const ledger = new EvidenceLedger(config.repo);
-  let sinceCommit = 0;
-  ctx.on(
-    "session/event" as never,
-    ((ev: Record<string, unknown>) => {
-      const t = toTransition(ev);
-      if (!t) return;
-      try {
-        const row = ledger.emit(t.kind, t.payload);
-        if (row.id % 100 === 1) log.info(`evidence: row #${row.id} (${t.kind})`);
-        sinceCommit++;
-      } catch (e) {
-        log.warn(`evidence: emit failed: ${e instanceof Error ? e.message : String(e)}`);
-      }
-    }) as never,
-  );
-  // Commit cadence: piggyback a timer effect; offline tolerated (ledger stays local).
+  const sessionId = (s: unknown) => String((s as { id?: unknown })?.id ?? "unknown");
+  let dirty = false;
+
+  ctx.on("session/created" as never, ((session: unknown) => {
+    ledger.emit("dsh/session-created", { session: sessionId(session) });
+    dirty = true;
+  }) as never);
+
+  ctx.on("session/event" as never, ((session: unknown, event: { type?: unknown }) => {
+    const t = toTransition(event as Record<string, unknown>);
+    if (!t) return;
+    ledger.emit(t.kind, { session: sessionId(session), ...t.payload });
+    dirty = true;
+  }) as never);
+
+  ctx.on("session/disposed" as never, ((session: unknown) => {
+    ledger.emit("dsh/session-disposed", { session: sessionId(session) });
+    dirty = true;
+    commitEvidence(config.repo).catch((e) => log.warn(`evidence: commit failed: ${e}`));
+  }) as never);
+
   ctx.effect(() => {
     const timer = setInterval(() => {
-      if (sinceCommit === 0) return;
-      sinceCommit = 0;
-      import("./git.js").then(({ commitEvidence }) =>
-        commitEvidence(config.repo).catch((e) => log.warn(`evidence: commit failed: ${e}`)),
-      );
+      if (!dirty) return;
+      dirty = false;
+      commitEvidence(config.repo).catch((e) => log.warn(`evidence: commit failed: ${e}`));
     }, 60_000);
     return () => clearInterval(timer);
   });
+
+  const v = ledger.verify();
+  log.info(`evidence: ledger ${v.ok ? `intact (${v.count} rows)` : `BROKEN: ${v.reason}`}`);
 }

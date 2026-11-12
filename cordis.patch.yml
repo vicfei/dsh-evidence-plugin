@@ -1,0 +1,4 @@
+# evidence ledger: one host row. Hash-chained session transitions in your own git repo.
+- insert:
+    - id: evidence-ledger
+      name: dsh-evidence-plugin
