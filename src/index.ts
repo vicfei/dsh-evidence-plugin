@@ -7,6 +7,7 @@
 //   'session/event' receives (session, event) — the event is the SECOND argument.
 
 import type { Context } from "@deepseek-ai/cordis";
+import Schema from "@deepseek-ai/schemastery";
 import { EvidenceLedger } from "./ledger.js";
 import { toTransition } from "./entry.js";
 import { commitEvidence } from "./git.js";
@@ -15,12 +16,13 @@ export const name = "dsh-evidence-plugin";
 
 export const inject: readonly string[] = [];
 
+export const Config = Schema.object({
+  repo: Schema.string().default("").description("absolute path to the evidence git repo (empty = disabled)"),
+});
+
 export interface Config {
-  /** Absolute path to the evidence git repo. */
   repo: string;
 }
-
-export const Config: Config = { repo: "" } as unknown as Config;
 
 export function apply(ctx: Context, config: Config): void {
   const log = ctx.logger;
