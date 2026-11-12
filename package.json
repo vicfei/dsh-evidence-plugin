@@ -1,0 +1,28 @@
+{
+  "name": "dsh-evidence-plugin",
+  "version": "0.1.0",
+  "description": "The evidence ledger from dsh-super-agent, inside DeepSeek Harness — every session transition lands in a hash-chained, append-only ledger in your own git repo. Tamper-evident by construction.",
+  "type": "module",
+  "main": "./lib/index.js",
+  "types": "./lib/types/index.d.ts",
+  "exports": {
+    ".": { "types": "./lib/types/index.d.ts", "default": "./lib/index.js" },
+    "./package.json": "./package.json"
+  },
+  "files": ["lib", "src", "locale", "README.md", "README.zh-CN.md"],
+  "engines": { "node": "^22.22.3 || >=24.0.0" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "keywords": ["dsh-plugin", "deepseek-harness", "evidence", "ledger", "audit", "trust", "dsh-super-agent"],
+  "peerDependencies": { "@deepseek-ai/cordis": "^4.0.0" },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "^4.0.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  },
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/vicfei/dsh-evidence-plugin.git" }
+}

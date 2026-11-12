@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "证据账本",
+    "description": "DSH 的每次会话转换都落进你自己 git 仓里的哈希链账本——只追加、防篡改。",
+    "detail": "忠实移植 dsh-super-agent v1.5 的账本：entry_hash = sha256(kind⟟payload⟟prev)。改任何一行链即断，截尾则锚即报。信任是一条你能验证的链。"
+  }
+}

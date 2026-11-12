@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "evidence ledger",
+    "description": "Every DSH session transition lands in a hash-chained, append-only ledger in your own git repo.",
+    "detail": "A faithful port of the dsh-super-agent v1.5 ledger: entry_hash = sha256(kind⟟payload⟟prev). Edit a row and the chain breaks; truncate the tail and the head anchor breaks. Trust is a chain you can verify."
+  }
+}
