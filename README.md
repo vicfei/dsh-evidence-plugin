@@ -26,7 +26,7 @@ From the plugin market, or `dsh plugin add vicfei/dsh-evidence-plugin`.
 
 ## Maintainer verification checklist
 
-1. Cordis catalog check for `session/event` / `agent/*` signatures — the seam is `src/entry.ts`.
+1. ~~Cordis catalog check~~ **RESOLVED 2026-11-12**: contract verified (see agentdiary README note) — `inject: []`, two-arg `(session, event)` handlers, schemastery `Schema.object` Config, `dsh.bundle` layer manifest. Headless boot activates both entries with zero warnings.
 2. Live smoke under Node ≥22.22.3 with a real session; then npm publish + dsh-plugin.org listing.
 
 MIT
