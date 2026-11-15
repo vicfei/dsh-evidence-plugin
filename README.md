@@ -15,7 +15,7 @@ Complements mutable work-state layers (e.g. LoopX): they carry the work, this ma
 
 ## Install
 
-From the plugin market, or `dsh plugin add vicfei/dsh-evidence-plugin`.
+From the plugin market, or `dsh plugin add dsh-evidence-plugin`.
 
 ## Configure
 

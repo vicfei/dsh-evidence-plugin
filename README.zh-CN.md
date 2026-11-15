@@ -15,7 +15,7 @@ evidence/head           最后一个 entryHash（截尾锚）
 
 ## 安装
 
-插件市场，或 `dsh plugin add vicfei/dsh-evidence-plugin`。
+插件市场，或 `dsh plugin add dsh-evidence-plugin`。
 
 ## 配置
 
