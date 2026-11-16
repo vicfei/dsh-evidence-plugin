@@ -39,13 +39,15 @@
     "dsh-super-agent"
   ],
   "peerDependencies": {
-    "@deepseek-ai/cordis": "^4.0.0"
+    "@deepseek-ai/cordis": "^4.0.0",
+    "@deepseek-ai/dsh": ">=0.2.0-rc.2 <0.3.0-0"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "^4.0.0",
     "typescript": "^5.9.0",
     "vitest": "^3.2.0",
-    "@types/node": "^22.0.0"
+    "@types/node": "^22.0.0",
+    "@deepseek-ai/dsh": "0.2.2-rc.1"
   },
   "license": "MIT",
   "repository": {
