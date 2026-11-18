@@ -1,7 +1,7 @@
 {
   "name": "dsh-evidence-plugin",
-  "version": "0.1.0",
-  "description": "The evidence ledger from dsh-super-agent, inside DeepSeek Harness \u2014 every session transition lands in a hash-chained, append-only ledger in your own git repo. Tamper-evident by construction.",
+  "version": "0.1.1",
+  "description": "The evidence ledger from dsh-super-agent, inside DeepSeek Harness — every session transition lands in a hash-chained, append-only ledger in your own git repo. Tamper-evident by construction.",
   "type": "module",
   "main": "./lib/index.js",
   "types": "./lib/types/index.d.ts",

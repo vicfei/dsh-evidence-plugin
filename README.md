@@ -15,7 +15,13 @@ Complements mutable work-state layers (e.g. LoopX): they carry the work, this ma
 
 ## Install
 
-From the plugin market, or `dsh plugin add dsh-evidence-plugin`.
+From the plugin market, or `dsh plugin --profile web add dsh-evidence-plugin`.
+
+**Deployment notes** (learned the hard way on live nodes):
+
+- The web app runs the **web profile** — a plain `dsh plugin add` installs into `default` and never loads. Use `--profile web` (or install from the market inside the web UI).
+- Port 3080 is often taken; start with `dsh web --port <n>`.
+- Node ≥ 22.22.3 / 24 (the harness's own engines floor).
 
 ## Configure
 
@@ -27,6 +33,6 @@ From the plugin market, or `dsh plugin add dsh-evidence-plugin`.
 ## Maintainer verification checklist
 
 1. ~~Cordis catalog check~~ **RESOLVED 2026-11-12**: contract verified (see agentdiary README note) — `inject: []`, two-arg `(session, event)` handlers, schemastery `Schema.object` Config, `dsh.bundle` layer manifest. Headless boot activates both entries with zero warnings.
-2. Live smoke under Node ≥22.22.3 with a real session; then npm publish + dsh-plugin.org listing.
+2. ~~Live smoke~~ **PASSED 2026-11-18** (win11, real web session): 126-row chain verified intact, 3 auto-commits landed. Deployment potholes documented above.
 
 MIT

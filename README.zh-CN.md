@@ -15,7 +15,13 @@ evidence/head           最后一个 entryHash（截尾锚）
 
 ## 安装
 
-插件市场，或 `dsh plugin add dsh-evidence-plugin`。
+插件市场，或 `dsh plugin --profile web add dsh-evidence-plugin`。
+
+**部署注意事项**（真机踩坑得来）：
+
+- web 应用跑在 **web profile** 上——直接 `dsh plugin add` 装进 `default`，永远不加载。用 `--profile web`（或在 web UI 的插件市场里装）；
+- 3080 端口常被占用，用 `dsh web --port <n>` 起服务；
+- Node ≥ 22.22.3 / 24（harness 自身的 engines 下限）。
 
 ## 配置
 
@@ -26,7 +32,7 @@ evidence/head           最后一个 entryHash（截尾锚）
 
 ## 维护者验证清单
 
-1. 以 `@deepseek-ai/dsh` 生成目录核对 `session/event`、`agent/*` 签名——缝隙在 `src/entry.ts`；
-2. Node ≥22.22.3 真机会话冒烟；随后 npm 发布 + dsh-plugin.org 收录。
+1. ~~`session/event`、`agent/*` 签名核对~~ **2026-11-12 已解决**：`inject: []`、两参 `(session, event)` handler、schemastery `Schema.object` Config、`dsh.bundle` manifest；headless 启动零告警激活。
+2. ~~真机冒烟~~ **2026-11-18 通过**（win11，真实 web 会话）：126 行链验证完好，3 次自动提交落地。踩坑记录见上文部署注意事项。
 
 MIT
