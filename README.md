@@ -36,3 +36,15 @@ From the plugin market, or `dsh plugin --profile web add dsh-evidence-plugin`.
 2. ~~Live smoke~~ **PASSED 2026-11-18** (win11, real web session): 126-row chain verified intact, 3 auto-commits landed. Deployment potholes documented above.
 
 MIT
+
+## Adapters (v0.3)
+
+The evidence engine (`core.ts`) is host-agnostic: adapters normalize a harness's event
+stream into it, and every adapter writes to the same hash-chained ledger.
+
+- **Cordis** (`index.ts`) — DeepSeek Harness, the original.
+- **OAR** (`src/adapters/oar.ts`) — [Open Agent Runtime](https://github.com/botiverse/oar):
+  the host owns the OAR session and hands it in duck-typed (zero-dependency); the mapping
+  uses the same event vocabulary as the agentdiary OAR adapter, so both plugins speak
+  identical event names across harnesses. `released`/`disposed`/`runtime_exited` drive the
+  teardown transition and its flush commit.
