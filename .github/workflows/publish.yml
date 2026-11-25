@@ -1,0 +1,31 @@
+name: publish
+
+# Trusted Publishing (OIDC): no tokens, no OTP, no chat-relayed secrets — the dsh-super-agent
+# pattern (proven live 2026-11-25, v2.0.1). Requires a ONE-TIME binding on npmjs.com:
+# package settings → Trusted Publisher → repository `vicfei/dsh-evidence-plugin`,
+# workflow `publish.yml`, environment empty. After that, pushing a v* tag publishes.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # the OIDC token npm exchanges for a publish grant
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      # Trusted Publishing needs node >=22.14 AND npm >=11.5.1 (docs.npmjs.com/trusted-publishers):
+      # older npm publishes anonymously instead of doing the OIDC exchange (E404 on the scoped PUT).
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - run: npm install -g npm@11 && npm --version
+      - run: grep -q tencentyun package-lock.json && exit 1 || true # the mirror trap, fail loud
+      - run: npm ci --no-fund --no-audit
+      - run: npm test
+      - run: npm publish --access public
